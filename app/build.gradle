@@ -1,0 +1,172 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        applicationId "com.soufianekre.floatingdraw"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    def biometric_version = "1.0.0"
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // Androidx Libraries
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+
+    implementation "androidx.print:print:1.0.0"
+
+
+    implementation "com.google.android.material:material:1.2.1"
+
+    implementation "androidx.preference:preference-ktx:1.1.1"
+
+    // view model
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleVersion"
+    kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.lifecycleVersion"
+
+
+    /*** third party Ui components  ***/
+    // color picker
+    implementation 'com.github.duanhong169:colorpicker:1.1.6'
+    // peek view
+    implementation 'com.klinkerapps:peekview:1.2.3'
+    // custom Toast
+    implementation 'com.github.GrenderG:Toasty:1.5.0'
+    // material dialogs
+    implementation 'com.afollestad.material-dialogs:core:3.3.0'
+    // app intro
+    implementation 'com.github.AppIntro:AppIntro:6.0.0'
+    // transformation layout
+    implementation "com.github.skydoves:transformationlayout:1.0.6"
+    // circle ImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //butter knife
+    implementation "com.jakewharton:butterknife:$rootProject.butter_knife_version"
+    kapt "com.jakewharton:butterknife-compiler:$rootProject.butter_knife_version"
+
+
+    // logger
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+    // time
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'joda-time:joda-time:2.10.1'
+
+    // RxJava2
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    // Room db
+    implementation "androidx.room:room-rxjava2:$rootProject.roomDatabaseVersion"
+    implementation "androidx.room:room-runtime:$rootProject.roomDatabaseVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomDatabaseVersion"
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+
+    // storage
+    implementation 'com.snatik:storage:2.1.0'
+
+    // balloon
+    implementation "com.github.skydoves:balloon:1.2.9"
+
+
+    // Gson
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+
+    // lock view
+    implementation 'com.andrognito.patternlockview:patternlockview:1.0.0'
+    implementation 'com.andrognito.patternlockview:patternlockview-reactive:1.0.0'
+
+    // about + License
+    implementation "com.mikepenz:aboutlibraries:8.3.0"
+    implementation 'com.github.daniel-stoneuk:material-about-library:3.1.2'
+    implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
+
+    /* Test + Debug */
+
+    // debug leaks
+    /*
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+    */
+    // show crash activity
+    debugImplementation 'cat.ereza:customactivityoncrash:2.2.0'
+
+    // Hyperion App inspection tool
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-core:0.9.30'
+    // Hyperion App Plugins
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-attr:0.9.30'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-build-config:0.9.30'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-disk:0.9.30'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-geiger-counter:0.9.30'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-measurement:0.9.30'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-phoenix:0.9.30'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-recorder:0.9.30'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-shared-preferences:0.9.30'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-timber:0.9.30'
+
+    // debug database
+    debugImplementation "com.amitshekhar.android:debug-db:$rootProject.debugDBVersion"
+
+    // process death debugging
+    debugImplementation "com.github.YarikSOffice.Venom:venom:0.3.1"
+
+    // dependency injection
+    implementation "com.google.dagger:dagger:$rootProject.dagger2Version"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger2Version"
+    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger2Version"
+
+    // dependencies for local unit tests
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+    // UI Testing
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$rootProject.espressoVersion"
+    androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    //androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+
+
+
+
+}

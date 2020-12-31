@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">FloatingDraw</string>
+    <string name="search_hint">Hint</string>
+    <string name="unknown_error_occurred">Unknown Error Occurred</string>
+    <string name="failed_to_load_image">Failed to load Image</string>
+    <string name="file_saved">File Saved</string>
+    <string name="invalid_file_format">Invalid File Format</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="file_already_existes_overwrite">"File Already Existes "</string>
+    <string name="filename_invalid_characters">File name has invalid Characters</string>
+    <string name="save_as">Save as :</string>
+    <string name="filename_cannot_be_empty">File name cannot be Empty</string>
+</resources>
