@@ -69,6 +69,7 @@ dependencies {
     implementation 'com.github.GrenderG:Toasty:1.5.0'
     // material dialogs
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
+    implementation 'com.afollestad.material-dialogs:files:3.2.1'
     // app intro
     implementation 'com.github.AppIntro:AppIntro:6.0.0'
     // transformation layout

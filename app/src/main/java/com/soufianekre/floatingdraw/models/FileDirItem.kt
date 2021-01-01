@@ -1,7 +1,8 @@
-package com.soufianekre.floatingdraw.extensions.file
+package com.soufianekre.floatingdraw.models
 
 import android.content.Context
 import android.net.Uri
+import com.soufianekre.floatingdraw.data.app_prefs.*
 import com.soufianekre.floatingdraw.extensions.*
 import com.soufianekre.floatingdraw.helper.*
 import java.io.File

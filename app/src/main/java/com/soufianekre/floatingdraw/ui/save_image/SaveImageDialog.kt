@@ -2,13 +2,13 @@ package com.soufianekre.floatingdraw.ui.save_image
 
 import android.app.AlertDialog
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.files.folderChooser
 import com.soufianekre.floatingdraw.R
-import com.soufianekre.floatingdraw.extensions.beGone
-import com.soufianekre.floatingdraw.extensions.getFilenameFromPath
-import com.soufianekre.floatingdraw.extensions.isAValidFilename
-import com.soufianekre.floatingdraw.helper.JPG
-import com.soufianekre.floatingdraw.helper.PNG
-import com.soufianekre.floatingdraw.helper.SVG
+import com.soufianekre.floatingdraw.extensions.*
+import com.soufianekre.floatingdraw.data.app_prefs.JPG
+import com.soufianekre.floatingdraw.data.app_prefs.PNG
+import com.soufianekre.floatingdraw.data.app_prefs.SVG
 import com.soufianekre.floatingdraw.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.dialog_save_image.*
 import kotlinx.android.synthetic.main.dialog_save_image.view.*
@@ -24,7 +24,7 @@ class SaveImageDialog(val activity : BaseActivity, val defaultPath:String, val d
     init{
         val initialFilename = getInitialFilename()
         var folder =
-        if (defaultPath.isEmpty()) "${.internalStroagePath}/$SIMPLE_DRAW"
+        if (defaultPath.isEmpty()) "${activity.baseContext.internalStoragePath}/$SIMPLE_DRAW"
         else defaultPath
 
         val view = activity.layoutInflater.inflate(R.layout.dialog_save_image,null).apply{
@@ -38,11 +38,14 @@ class SaveImageDialog(val activity : BaseActivity, val defaultPath:String, val d
                 save_image_path_label.visibility = View.GONE
                 save_image_path.visibility = View.GONE
             }else{
-                save_image_path.text = activity.humanizePath(folder)
                 save_image_path.setOnClickListener{
-                    FilePickerDialog(activity,folder,false,showFAB = true){
-                        save_image_path.text = activity.humanizePath(it)
-                        folder = it
+                    MaterialDialog(activity).show {
+                        folderChooser(activity) { dialog, it ->
+                            // File selected
+                            save_image_path.text = it.absolutePath
+                            folder = it.absolutePath
+                        }
+
                     }
                 }
             }
@@ -52,8 +55,6 @@ class SaveImageDialog(val activity : BaseActivity, val defaultPath:String, val d
             .setPositiveButton(R.string.ok,null)
             .setNegativeButton(R.string.cancel,null)
             .create().apply{
-                activity.setupDialogStuff(view,this,R.string.save_as){
-                    showKeyboard(view.save_image_filename_field)
                     getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener{
                         val filename = save_image_filename_field.text.toString()
                         if (filename.isEmpty()){
@@ -86,7 +87,6 @@ class SaveImageDialog(val activity : BaseActivity, val defaultPath:String, val d
                             dismiss()
                         }
                     }
-                }
             }
     }
 

@@ -1,10 +1,8 @@
 package com.soufianekre.floatingdraw.models
 
-import android.app.Activity
 import android.graphics.Path
 
 import com.soufianekre.floatingdraw.R
-import com.soufianekre.floatingdraw.models.actions.*
 import com.soufianekre.floatingdraw.ui.base.BaseActivity
 import java.io.ObjectInputStream
 import java.io.Serializable
@@ -29,8 +27,16 @@ class CustomPath : Path(),Serializable {
         try {
             while (i < tokens.size) {
                 when (tokens[i][0]) {
-                    'M' -> addAction(DrawMove(tokens[i]))
-                    'L' -> addAction(DrawLine(tokens[i]))
+                    'M' -> addAction(
+                        DrawMove(
+                            tokens[i]
+                        )
+                    )
+                    'L' -> addAction(
+                        DrawLine(
+                            tokens[i]
+                        )
+                    )
                     'Q' -> {
                         // Quad actions are of the following form:
                         // "Qx1,y1 x2,y2"
@@ -38,7 +44,11 @@ class CustomPath : Path(),Serializable {
                         if (i + 1 >= tokens.size)
                             throw InvalidParameterException("Error parsing the data for a Quad.")
 
-                        addAction(DrawQuad(tokens[i] + " " + tokens[i + 1]))
+                        addAction(
+                            DrawQuad(
+                                tokens[i] + " " + tokens[i + 1]
+                            )
+                        )
                         ++i
                     }
                 }

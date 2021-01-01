@@ -12,9 +12,9 @@ import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import com.bumptech.glide.signature.ObjectKey
-import com.soufianekre.floatingdraw.helper.normalizeRegex
-import com.soufianekre.floatingdraw.helper.photoExtensions
-import com.soufianekre.floatingdraw.helper.rawExtensions
+import com.soufianekre.floatingdraw.data.app_prefs.normalizeRegex
+import com.soufianekre.floatingdraw.data.app_prefs.photoExtensions
+import com.soufianekre.floatingdraw.data.app_prefs.rawExtensions
 import java.io.File
 import java.text.Normalizer
 import java.util.*
@@ -26,12 +26,10 @@ fun String.getFilenameExtension() = substring(lastIndexOf(".") + 1)
 
 fun String.getBasePath(context: Context): String {
     return when {
-        /*
+
         startsWith(context.internalStoragePath) -> context.internalStoragePath
         context.isPathOnSD(this) -> context.sdCardPath
-        context.isPathOnOTG(this) -> context.otgPath
 
-         */
         else -> "/"
     }
 }
@@ -168,7 +166,8 @@ fun String.getAvailableStorageB(): Long {
 
 
 // remove diacritics, for example č -> c
-fun String.normalizeString() = Normalizer.normalize(this, Normalizer.Form.NFD).replace(normalizeRegex, "")
+fun String.normalizeString() = Normalizer.normalize(this, Normalizer.Form.NFD).replace(
+    normalizeRegex, "")
 
 fun String.getMimeType(): String {
     val typesMap = HashMap<String, String>().apply {

@@ -1,4 +1,4 @@
-package com.soufianekre.floatingdraw.helper
+package com.soufianekre.floatingdraw.data.app_prefs
 
 import android.os.Build
 
@@ -19,6 +19,10 @@ const val FORCE_PORTRAIT_MODE = "force_portrait_mode"
 const val NOMEDIA :String = "no_media"
 const val MD5 : String = "md5"
 
+
+const val INTERNAL_STORAGE_PATH = "internal_storage_path"
+const val SD_CARD_PATH = "sd_card_path"
+const val TREE_URI = "tree_uri"
 
 fun isMarshmallowPlus() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 fun isNougatPlus() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N

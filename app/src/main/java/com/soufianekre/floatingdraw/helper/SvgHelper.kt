@@ -6,7 +6,8 @@ import android.net.Uri
 import android.sax.RootElement
 import android.util.Xml
 import com.soufianekre.floatingdraw.R
-import com.soufianekre.floatingdraw.extensions.file.FileDirItem
+import com.soufianekre.floatingdraw.extensions.getFileOutputStream
+import com.soufianekre.floatingdraw.models.FileDirItem
 import com.soufianekre.floatingdraw.extensions.getFilenameFromPath
 import com.soufianekre.floatingdraw.models.CustomPath
 import com.soufianekre.floatingdraw.ui.base.BaseActivity
@@ -17,7 +18,11 @@ import java.io.*
 
 object SvgHelper {
     fun saveSvg(activity: BaseActivity, path: String, canvas: MyCanvas) {
-        activity.getFileOutputStream(FileDirItem(path, path.getFilenameFromPath()), true) {
+        activity.getFileOutputStream(
+            FileDirItem(
+                path,
+                path.getFilenameFromPath()
+            ), true) {
             saveToOutputStream(activity, it, canvas)
         }
     }

@@ -5,11 +5,12 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import androidx.core.content.ContextCompat
 import com.soufianekre.floatingdraw.R
-import com.soufianekre.floatingdraw.helper.*
 
 const val PREF_NAME: String = "drawing_pref"
 
 class AppPreferences(var context: Context) {
+
+
 
     private var prefs : SharedPreferences = context.getSharedPreferences(PREF_NAME,Context.MODE_PRIVATE);
 
@@ -17,6 +18,18 @@ class AppPreferences(var context: Context) {
     companion object {
         fun newInstance(context: Context) = AppPreferences(context)
     }
+
+    var internalStoragePath: String
+        get() = prefs.getString(INTERNAL_STORAGE_PATH, "")!!
+        set(internalStoragePath) = prefs.edit().putString(INTERNAL_STORAGE_PATH, internalStoragePath).apply()
+
+    var sdCardPath: String
+        get() = prefs.getString(SD_CARD_PATH, "")!!
+        set(sdCardPath) = prefs.edit().putString(SD_CARD_PATH, sdCardPath).apply()
+
+    var treeUri: String
+        get() = prefs.getString(TREE_URI, "")!!
+        set(uri) = prefs.edit().putString(TREE_URI, uri).apply()
 
     var showBrushSize: Boolean
         get() = prefs.getBoolean(SHOW_BRUSH_SIZE, true)

@@ -1,11 +1,11 @@
 package com.soufianekre.floatingdraw.extensions
 
 import android.content.Context
-import com.soufianekre.floatingdraw.helper.MD5
-import com.soufianekre.floatingdraw.helper.NOMEDIA
+import com.soufianekre.floatingdraw.data.app_prefs.MD5
+import com.soufianekre.floatingdraw.data.app_prefs.NOMEDIA
 
-import com.soufianekre.floatingdraw.extensions.file.FileDirItem
-import com.soufianekre.floatingdraw.helper.photoExtensions
+import com.soufianekre.floatingdraw.models.FileDirItem
+import com.soufianekre.floatingdraw.data.app_prefs.photoExtensions
 import java.io.File
 import java.security.MessageDigest
 import java.util.*
@@ -77,8 +77,11 @@ private fun getDirectoryFileCount(dir: File, countHiddenItems: Boolean): Int {
 fun File.getDirectChildrenCount(countHiddenItems: Boolean) = listFiles()?.filter { if (countHiddenItems) true else !it.name.startsWith('.') }?.size
     ?: 0
 
-fun File.toFileDirItem(context: Context) = FileDirItem(absolutePath, name,
-    context.getIsPathDirectory(absolutePath), 0, length(), lastModified())
+fun File.toFileDirItem(context: Context) =
+    FileDirItem(
+        absolutePath, name,
+        context.getIsPathDirectory(absolutePath), 0, length(), lastModified()
+    )
 
 fun File.containsNoMedia(): Boolean {
     return if (!isDirectory) {

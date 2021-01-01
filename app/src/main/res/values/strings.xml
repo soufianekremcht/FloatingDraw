@@ -10,5 +10,18 @@
     <string name="file_already_existes_overwrite">"File Already Existes "</string>
     <string name="filename_invalid_characters">File name has invalid Characters</string>
     <string name="save_as">Save as :</string>
-    <string name="filename_cannot_be_empty">File name cannot be Empty</string>
+    <string name="filename_cannot_be_empty">File name cannot be Empty</string>*
+
+
+
+    <string name="select_storage">Select storage</string>
+    <string name="internal">Internal</string>
+    <string name="sd_card">SD Card</string>
+    <string name="root">Root</string>
+    <string name="wrong_root_selected">Wrong folder selected, please select the root folder of your SD card</string>
+    <string name="sd_card_usb_same">SD card and USB device paths cannot be the same</string>
+    <string name="app_on_sd_card">You seem to have the app installed on an SD card, that makes the app widgets unavailable. You won\'t even see them on the list of available widgets.
+        It is a system limitation, so if you want to use the widgets, you have to move the app back on the internal storage.</string>
+    <string name="new_folder">New Folder</string>
+
 </resources>

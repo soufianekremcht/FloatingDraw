@@ -8,12 +8,15 @@ import android.net.Uri
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import androidx.documentfile.provider.DocumentFile
-import com.soufianekre.floatingdraw.extensions.file.FileDirItem
+import com.soufianekre.floatingdraw.R
+import com.soufianekre.floatingdraw.models.FileDirItem
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.OutputStream
 
+
+fun Context.isPathOnSD(path: String) = sdCardPath.isNotEmpty() && path.startsWith(sdCardPath)
 
 fun Context.getIsPathDirectory(path: String): Boolean {
     return File(path).isDirectory
@@ -42,6 +45,23 @@ fun Context.getMediaStoreLastModified(path: String): Long {
     return 0
 }
 
+fun Context.getHumanReadablePath(path: String): String {
+    return getString(when (path) {
+        "/" -> R.string.root
+        internalStoragePath -> R.string.internal
+        else -> R.string.sd_card
+    })
+}
+
+
+fun Context.humanizePath(path: String): String {
+    val trimmedPath = path.trimEnd('/')
+    val basePath = path.getBasePath(this)
+    return when (basePath) {
+        "/" -> "${getHumanReadablePath(basePath)}$trimmedPath"
+        else -> trimmedPath.replaceFirst(basePath, getHumanReadablePath(basePath))
+    }
+}
 
 
 //fun Context.getTimeFormat() = if (baseConfig.use24HourFormat) TIME_FORMAT_24 else TIME_FORMAT_12
@@ -170,15 +190,15 @@ fun Context.getFileUri(path: String) = when {
     else -> MediaStore.Files.getContentUri("external")
 }
 
+
 fun Context.getDocumentFile(path: String): DocumentFile? {
-    val isOTG = isPathOnOTG(path)
-    var relativePath = path.substring(if (isOTG) otgPath.length else sdCardPath.length)
+    var relativePath = sdCardPath.length.toString()
     if (relativePath.startsWith(File.separator)) {
         relativePath = relativePath.substring(1)
     }
 
     return try {
-        val treeUri = Uri.parse(if (isOTG) baseConfig.OTGTreeUri else baseConfig.treeUri)
+        val treeUri = Uri.parse("")
         var document = DocumentFile.fromTreeUri(applicationContext, treeUri)
         val parts = relativePath.split("/").filter { it.isNotEmpty() }
         for (part in parts) {
@@ -191,6 +211,7 @@ fun Context.getDocumentFile(path: String): DocumentFile? {
 }
 
 fun Activity.getFileOutputStream(fileDirItem: FileDirItem, allowCreatingNewFile: Boolean = false, callback: (outputStream: OutputStream?) -> Unit) {
+    /*
     if (needsStupidWritePermissions(fileDirItem.path)) {
         handleSAFDialog(fileDirItem.path) {
             if (!it) {
@@ -209,7 +230,8 @@ fun Activity.getFileOutputStream(fileDirItem: FileDirItem, allowCreatingNewFile:
             }
 
             if (!getDoesFilePathExist(fileDirItem.path)) {
-                document = document.createFile("", fileDirItem.name) ?: getDocumentFile(fileDirItem.path)
+                document =
+                    document.createFile("", fileDirItem.name) ?: getDocumentFile(fileDirItem.path)
             }
 
             if (document?.exists() == true) {
@@ -236,4 +258,8 @@ fun Activity.getFileOutputStream(fileDirItem: FileDirItem, allowCreatingNewFile:
             callback(null)
         }
     }
+
+     */
 }
+
+

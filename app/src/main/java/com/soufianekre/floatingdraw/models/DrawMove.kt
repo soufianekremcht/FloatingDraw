@@ -1,4 +1,4 @@
-package com.soufianekre.floatingdraw.models.actions
+package com.soufianekre.floatingdraw.models
 
 import android.graphics.Path
 import java.io.Writer
