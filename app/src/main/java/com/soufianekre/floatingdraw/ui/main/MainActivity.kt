@@ -1,6 +1,7 @@
 package com.soufianekre.floatingdraw.ui.main
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -15,6 +16,11 @@ import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.SeekBar
 import androidx.core.content.ContextCompat
+import com.skydoves.colorpickerview.ColorEnvelope
+import com.skydoves.colorpickerview.ColorPickerDialog
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
+
+
 import com.soufianekre.floatingdraw.R
 import com.soufianekre.floatingdraw.data.app_prefs.JPG
 import com.soufianekre.floatingdraw.data.app_prefs.PNG
@@ -127,6 +133,7 @@ class MainActivity : BaseActivity(), CanvasListener {
             R.id.menu_main_clear_canvas -> clearCanvas()
             R.id.menu_main_save -> saveDrawing()
             R.id.menu_main_change_background -> showCanvasBackgroundColorPicker(drawing_canvas)
+
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -173,7 +180,7 @@ class MainActivity : BaseActivity(), CanvasListener {
 
         brush_color_preview.setOnClickListener {
             showBrushColorPicker(it)
-            showCanvasBackgroundColorPicker(it)
+            //showCanvasBackgroundColorPicker(it)
         }
 
         undo_img.setOnClickListener { drawing_canvas.undo() }
@@ -185,6 +192,8 @@ class MainActivity : BaseActivity(), CanvasListener {
     }
 
     private fun showBrushColorPicker(view: View) {
+        // first Color Picker
+        /*
         ColorPickerPopup.Builder(this)
             .initialColor(Color.RED) // Set initial color
             .enableBrightness(true) // Enable brightness slider or not
@@ -196,19 +205,43 @@ class MainActivity : BaseActivity(), CanvasListener {
             .build()
             .show(view, object : ColorPickerObserver() {
                 override fun onColorPicked(color: Int) {
-                    isEraserOn =false
-                    updateEraserState()
+
                 }
 
                 fun onColor(color: Int, fromUser: Boolean) {
-                    brush_color_preview.setColorFilter(color)
-                    drawing_canvas.setColor(color)
+
 
                 }
             })
+
+         */
+
+        // seconde Picker
+        ColorPickerDialog.Builder(this)
+            .setTitle("ColorPicker Dialog")
+            .setPreferenceName("MyColorPickerDialog")
+            .setPositiveButton(getString(R.string.confirm),
+                object : ColorEnvelopeListener{
+                    override fun onColorSelected(envelope: ColorEnvelope?, fromUser: Boolean) {
+                        brush_color_preview.setColorFilter(color)
+                        //drawing_canvas.setColor(color)
+                        /*
+                        isEraserOn = false
+                        updateEraserState()
+
+                         */
+                    }
+                })
+            .setNegativeButton(getString(R.string.cancel),
+                DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() })
+            .attachAlphaSlideBar(true) // the default value is true.
+            .attachBrightnessSlideBar(true) // the default value is true.
+            .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
+            .show()
     }
 
     private fun showCanvasBackgroundColorPicker(view: View) {
+
         ColorPickerPopup.Builder(this)
             .initialColor(Color.RED) // Set initial color
             .enableBrightness(true) // Enable brightness slider or not
@@ -272,6 +305,7 @@ class MainActivity : BaseActivity(), CanvasListener {
     private fun getBrushStrokeSize() = resources.getDimension(R.dimen.preview_dot_stroke_size).toInt()
 
     private fun saveDrawing(): Boolean {
+        trySaveImage()
         return true
     }
 
@@ -444,8 +478,12 @@ class MainActivity : BaseActivity(), CanvasListener {
                  */
 
                 startActivityForResult(intent, SAVE_IMAGE_INTENT)
-
-
+            }
+        }else{
+            if  (PermissionsHelper.isStoragePermissionsGranted(this)){
+                saveImage()
+            }else{
+                PermissionsHelper.requestStoragePermissions(this)
             }
         }
     }
@@ -467,6 +505,15 @@ class MainActivity : BaseActivity(), CanvasListener {
     }
 
     private fun saveFile(path: String) {
+        SaveImageDialog(this, defaultPath, defaultFilename, defaultExtension, false) { fullPath, filename, extension ->
+            savedPathsHash = drawing_canvas.getDrawingHashCode()
+            saveFile(fullPath)
+            defaultPath = fullPath.getParentPath()
+            defaultFilename = filename
+            defaultExtension = extension
+            appPrefs().lastSaveFolder = defaultPath
+            appPrefs().lastSaveExtension = extension
+        }
 
     }
 

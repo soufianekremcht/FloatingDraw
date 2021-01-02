@@ -63,6 +63,7 @@ dependencies {
     /*** third party Ui components  ***/
     // color picker
     implementation 'com.github.duanhong169:colorpicker:1.1.6'
+    implementation "com.github.skydoves:colorpickerview:2.2.2"
     // peek view
     implementation 'com.klinkerapps:peekview:1.2.3'
     // custom Toast
