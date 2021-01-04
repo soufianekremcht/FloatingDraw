@@ -12,11 +12,6 @@
         android:icon="@drawable/ic_clean_black_24"
         app:showAsAction="always"/>
 
-
-    <item
-        android:id="@+id/menu_main_confirm"
-        android:title="Confirm Image"
-        />
     <item android:id="@+id/menu_main_change_background"
         android:title="Change Background"
         />

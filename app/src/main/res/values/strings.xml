@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FloatingDraw</string>
+    <string name="app_name">Floating Draw</string>
     <string name="search_hint">Hint</string>
     <string name="unknown_error_occurred">Unknown Error Occurred</string>
     <string name="failed_to_load_image">Failed to load Image</string>
@@ -24,5 +24,6 @@
         It is a system limitation, so if you want to use the widgets, you have to move the app back on the internal storage.</string>
     <string name="new_folder">New Folder</string>
     <string name="confirm">Confirm</string>
+    <string name="no_storage_permissions">Storage Permissions has been denied</string>
 
 </resources>

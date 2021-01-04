@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Point
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.os.Environment
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import androidx.documentfile.provider.DocumentFile
@@ -210,28 +211,25 @@ fun Context.getDocumentFile(path: String): DocumentFile? {
     }
 }
 
-fun Activity.getFileOutputStream(fileDirItem: FileDirItem, allowCreatingNewFile: Boolean = false, callback: (outputStream: OutputStream?) -> Unit) {
-    /*
-    if (needsStupidWritePermissions(fileDirItem.path)) {
-        handleSAFDialog(fileDirItem.path) {
-            if (!it) {
-                return@handleSAFDialog
-            }
+fun Context.isSDCardSetAsDefaultStorage() = sdCardPath.isNotEmpty() && Environment.getExternalStorageDirectory().absolutePath.equals(sdCardPath, true)
 
-            var document = getDocumentFile(fileDirItem.path)
+fun Activity.getFileOutputStream(fileDirItem: FileDirItem, allowCreatingNewFile: Boolean = false,
+                                 callback: (outputStream: OutputStream?) -> Unit) {
+    var path = fileDirItem.path
+    if ((isPathOnSD(path) && !isSDCardSetAsDefaultStorage())){
+            var document = getDocumentFile(path)
             if (document == null && allowCreatingNewFile) {
                 document = getDocumentFile(fileDirItem.getParentPath())
             }
 
             if (document == null) {
-                showFileCreateError(fileDirItem.path)
+                //showFileCreateError(path)
                 callback(null)
-                return@handleSAFDialog
             }
 
-            if (!getDoesFilePathExist(fileDirItem.path)) {
+            if (!File(path).exists()) {
                 document =
-                    document.createFile("", fileDirItem.name) ?: getDocumentFile(fileDirItem.path)
+                    document!!.createFile("", fileDirItem.name) ?: getDocumentFile(path)
             }
 
             if (document?.exists() == true) {
@@ -242,12 +240,11 @@ fun Activity.getFileOutputStream(fileDirItem: FileDirItem, allowCreatingNewFile:
                     callback(null)
                 }
             } else {
-                showFileCreateError(fileDirItem.path)
+                //showFileCreateError(path)
                 callback(null)
             }
-        }
     } else {
-        val file = File(fileDirItem.path)
+        val file = File(path)
         if (file.parentFile?.exists() == false) {
             file.parentFile.mkdirs()
         }
@@ -258,8 +255,6 @@ fun Activity.getFileOutputStream(fileDirItem: FileDirItem, allowCreatingNewFile:
             callback(null)
         }
     }
-
-     */
 }
 
 

@@ -1,5 +1,6 @@
 package com.soufianekre.floatingdraw.ui.main
 
+
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
@@ -15,12 +16,11 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.SeekBar
+import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
-
-
 import com.soufianekre.floatingdraw.R
 import com.soufianekre.floatingdraw.data.app_prefs.JPG
 import com.soufianekre.floatingdraw.data.app_prefs.PNG
@@ -35,11 +35,13 @@ import com.soufianekre.floatingdraw.ui.save_image.SaveImageDialog
 import com.soufianekre.floatingdraw.ui.settings.SettingsActivity
 import com.soufianekre.floatingdraw.ui.views.CanvasListener
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
 import top.defaults.colorpicker.ColorPickerPopup
 import top.defaults.colorpicker.ColorPickerPopup.ColorPickerObserver
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.OutputStream
+import java.net.URLConnection
 
 
 class MainActivity : BaseActivity(), CanvasListener {
@@ -57,7 +59,7 @@ class MainActivity : BaseActivity(), CanvasListener {
         PNG
     private var intentUri: Uri? = null
     private var uriToLoad: Uri? = null
-    private var color = 0
+    private var brushColor = Color.BLACK
     private var brushSize = 0f
     private var savedPathsHash = 0L
     private var lastSavePromptTS = 0L
@@ -65,6 +67,8 @@ class MainActivity : BaseActivity(), CanvasListener {
     private var isImageCaptureIntent = false
     private var isEditIntent = false
     private var lastBitmapPath = ""
+
+    private var activity: MainActivity? = null;
 
     private var onStrokeWidthBarChangeListener: SeekBar.OnSeekBarChangeListener = object :
         SeekBar.OnSeekBarChangeListener {
@@ -81,10 +85,22 @@ class MainActivity : BaseActivity(), CanvasListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        activity = this;
         setContentView(R.layout.activity_main)
         setupCanvas()
         checkIntents()
 
+    }
+
+
+    private fun getStoragePermission(callback: () -> Unit) {
+        PermissionsHelper.handleStoragePermissions(this) {
+            if (it) {
+                callback()
+            } else {
+                showError(getString(R.string.no_storage_permissions))
+            }
+        }
     }
 
     override fun onResume() {
@@ -107,7 +123,7 @@ class MainActivity : BaseActivity(), CanvasListener {
     override fun onPause() {
         // save brush color + size
         appPrefs().brushSize = brushSize
-        appPrefs().brushColor = color
+        appPrefs().brushColor = brushColor
 
         super.onPause()
     }
@@ -133,7 +149,7 @@ class MainActivity : BaseActivity(), CanvasListener {
             R.id.menu_main_clear_canvas -> clearCanvas()
             R.id.menu_main_save -> saveDrawing()
             R.id.menu_main_change_background -> showCanvasBackgroundColorPicker(drawing_canvas)
-
+            R.id.menu_main_open_file -> tryOpenFile()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -165,8 +181,28 @@ class MainActivity : BaseActivity(), CanvasListener {
         startActivity(Intent(this, SettingsActivity::class.java))
     }
 
+    fun shareFile() {
+        Timber.e("Sharing File")
+//        val sharingIntent = Intent()
+//        sharingIntent.action = Intent.ACTION_SEND
+//        sharingIntent.type = "text/*"
+//        sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(backupFile))
+//
+//        val sendIntent = Intent.createChooser(sharingIntent, null)
+//        startActivity(sendIntent)
+        getImagePath(drawing_canvas.getBitmap()) {
+            ShareCompat.IntentBuilder.from(this)
+                .setStream(Uri.parse("file://" + it!!))
+                .setType(URLConnection.guessContentTypeFromName(it?.getFilenameFromPath()))
+                .startChooser()
+        }
+
+
+    }
+
 
     fun setupCanvas() {
+
         setCanvasBackgroundColor(Color.WHITE)
         //setBrushColor(ContextCompat.getColor(this,R.color.colorPrimary))
         defaultPath = ""
@@ -221,9 +257,12 @@ class MainActivity : BaseActivity(), CanvasListener {
             .setTitle("ColorPicker Dialog")
             .setPreferenceName("MyColorPickerDialog")
             .setPositiveButton(getString(R.string.confirm),
-                object : ColorEnvelopeListener{
+                object : ColorEnvelopeListener {
                     override fun onColorSelected(envelope: ColorEnvelope?, fromUser: Boolean) {
-                        brush_color_preview.setColorFilter(color)
+                        getBrushSizePreviewBackground().setColor(envelope!!.color)
+                        getBrushColorPreviewBackground().setColor(envelope!!.color)
+                        brush_size_preview.setColorFilter(envelope.color, PorterDuff.Mode.SRC_IN)
+                        drawing_canvas.setColor(envelope.color)
                         //drawing_canvas.setColor(color)
                         /*
                         isEraserOn = false
@@ -231,6 +270,7 @@ class MainActivity : BaseActivity(), CanvasListener {
 
                          */
                     }
+
                 })
             .setNegativeButton(getString(R.string.cancel),
                 DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() })
@@ -267,8 +307,9 @@ class MainActivity : BaseActivity(), CanvasListener {
         redo_img.setColorFilter(contrastColor, PorterDuff.Mode.SRC_IN)
 
         drawing_canvas.updateBackgroundColor(color)
+        drawing_canvas.setColor(color.getContrastColor());
         defaultExtension = PNG
-        getBrushPreviewView().setStroke(getBrushStrokeSize(), contrastColor)
+        getBrushSizePreviewBackground().setStroke(getBrushStrokeSize(), contrastColor)
     }
 
 
@@ -283,7 +324,7 @@ class MainActivity : BaseActivity(), CanvasListener {
         eraser_img.setImageDrawable(
             ContextCompat.getDrawable(
                 this, if (isEraserOn)
-                    R.drawable.ic_eraser_black_24 else R.drawable.ic_eraser_off_black_24
+                    R.drawable.ic_eraser_off_black_24 else R.drawable.ic_eraser_black_24
             )
         )
     }
@@ -298,11 +339,12 @@ class MainActivity : BaseActivity(), CanvasListener {
     }
 
 
+    private fun getBrushSizePreviewBackground() = brush_size_preview.background as GradientDrawable
+    private fun getBrushColorPreviewBackground() =
+        brush_color_preview.background as GradientDrawable
 
-
-    private fun getBrushPreviewView() = brush_size_preview.background as GradientDrawable
-
-    private fun getBrushStrokeSize() = resources.getDimension(R.dimen.preview_dot_stroke_size).toInt()
+    private fun getBrushStrokeSize() =
+        resources.getDimension(R.dimen.preview_dot_stroke_size).toInt()
 
     private fun saveDrawing(): Boolean {
         trySaveImage()
@@ -318,11 +360,11 @@ class MainActivity : BaseActivity(), CanvasListener {
     private fun checkIntents() {
         if (intent?.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true) {
             val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-            tryOpenFile(uri, intent)
+            tryOpenUri(uri!!, intent)
         }
         if (intent?.action == Intent.ACTION_SEND_MULTIPLE && intent.type?.startsWith("image/") == true) {
             val imageUris = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
-            imageUris.any { tryOpenUri(it, intent) }
+            imageUris?.any { tryOpenUri(it, intent) }
         }
         if (intent?.action == Intent.ACTION_VIEW && intent.data != null) {
             tryOpenUri(intent.data!!, intent)
@@ -346,6 +388,26 @@ class MainActivity : BaseActivity(), CanvasListener {
             }
         }
     }
+
+    private fun tryOpenFile() {
+        // traditional way
+        Intent(Intent.ACTION_GET_CONTENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+            startActivityForResult(this, PICK_IMAGE_INTENT)
+        }
+
+        // using material dialogs
+
+        /*MaterialDialog(this).show {
+            fileChooser(activity!!.baseContext) { materialDialog: MaterialDialog, file: File ->
+                tryOpenUri(file.toUri(),)
+            }
+        }*/
+
+
+    }
+
 
     private fun tryOpenUri(uri: Uri, intent: Intent) = when {
         uri.scheme == "file" -> {
@@ -387,14 +449,12 @@ class MainActivity : BaseActivity(), CanvasListener {
             "svg", "image/svg+xml" -> {
                 drawing_canvas.mBackgroundBitmap = null
                 SvgHelper.loadSvg(this, uri, drawing_canvas)
-                defaultExtension =
-                    SVG
+                defaultExtension = SVG
                 true
             }
             "jpg", "jpeg", "png", "gif", "image/jpg", "image/png", "image/gif" -> {
                 drawing_canvas.drawBitmap(this, uri)
-                defaultExtension =
-                    JPG
+                defaultExtension = JPG
                 true
             }
             else -> {
@@ -445,67 +505,61 @@ class MainActivity : BaseActivity(), CanvasListener {
                 saveToOutputStream(outputStream, defaultPath.getCompressionFormat(), true)
             }
             else -> {
-                PermissionsHelper.isStoragePermissionsGranted(this);
-                val fileDirItem =
-                    FileDirItem(
-                        defaultPath,
-                        defaultPath.getFilenameFromPath()
-                    )
-                getFileOutputStream(fileDirItem, true) {
-                    saveToOutputStream(it, defaultPath.getCompressionFormat(), true)
-                }
+                getStoragePermission {
+                    val fileDirItem =
+                        FileDirItem(
+                            defaultPath,
+                            defaultPath.getFilenameFromPath()
+                        )
+                    getFileOutputStream(fileDirItem, true) {
+                        saveToOutputStream(it, defaultPath.getCompressionFormat(), true)
+                    }
+                };
+
             }
         }
     }
 
     private fun trySaveImage() {
-        if (isQPlus()) {
-            SaveImageDialog(
-                this,
-                defaultPath,
-                defaultFilename,
-                defaultExtension,
-                true
-            ) { fullPath, filename, extension ->
-                val mimeType = if (extension == SVG) "svg+xml" else extension
-                defaultFilename = filename
-                defaultExtension = extension
-                appPrefs().lastSaveExtension = extension
-                /*
-                val intent = Intent(Intent.EXTRA_TITLE,"$filename.$extension")
-                addCategory(Intent.CATEGORY_OPENABLE)
+        getStoragePermission {
+            if (isQPlus()) {
+                SaveImageDialog(
+                    this,
+                    defaultPath,
+                    defaultFilename,
+                    defaultExtension,
+                    true
+                ) { fullPath, filename, extension ->
+                    val mimeType = if (extension == SVG) "svg+xml" else extension
+                    defaultFilename = filename
+                    defaultExtension = extension
+                    appPrefs().lastSaveExtension = extension
 
-                 */
+                    Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                        type = "image/$mimeType"
+                        putExtra(Intent.EXTRA_TITLE, "$filename.$extension")
+                        addCategory(Intent.CATEGORY_OPENABLE)
+                        startActivityForResult(this, SAVE_IMAGE_INTENT)
+                    }
 
-                startActivityForResult(intent, SAVE_IMAGE_INTENT)
-            }
-        }else{
-            if  (PermissionsHelper.isStoragePermissionsGranted(this)){
+                    startActivityForResult(intent, SAVE_IMAGE_INTENT)
+                }
+            } else {
                 saveImage()
-            }else{
-                PermissionsHelper.requestStoragePermissions(this)
             }
         }
-    }
-
-    private fun shareImage() {
 
     }
 
-    private fun tryOpenFile(uri: Uri?, intent: Intent) {
-        Intent(Intent.ACTION_GET_CONTENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "image/*"
-            startActivityForResult(this, PICK_IMAGE_INTENT)
-        }
-    }
 
     private fun saveImage() {
-
-    }
-
-    private fun saveFile(path: String) {
-        SaveImageDialog(this, defaultPath, defaultFilename, defaultExtension, false) { fullPath, filename, extension ->
+        SaveImageDialog(
+            this,
+            defaultPath,
+            defaultFilename,
+            defaultExtension,
+            false
+        ) { fullPath, filename, extension ->
             savedPathsHash = drawing_canvas.getDrawingHashCode()
             saveFile(fullPath)
             defaultPath = fullPath.getParentPath()
@@ -514,13 +568,28 @@ class MainActivity : BaseActivity(), CanvasListener {
             appPrefs().lastSaveFolder = defaultPath
             appPrefs().lastSaveExtension = extension
         }
+    }
+
+    private fun saveFile(path: String) {
+        when (path.getFilenameExtension()) {
+            SVG -> SvgHelper.saveSvg(this, path, drawing_canvas)
+            else -> saveAsImageFile(path)
+        }
 
     }
 
-    private fun saveImageFile(path: String) {
+    private fun saveAsImageFile(path: String) {
+        val fileDirItem = FileDirItem(path, path.getFilenameFromPath())
+        getFileOutputStream(fileDirItem, true) {
+            if (it != null) {
+                writeToOutputStream(path, it)
+                showInfo(getString(R.string.file_saved))
 
+            } else {
+                showError(getString(R.string.unknown_error_occurred))
+            }
+        }
     }
-
 
     private fun getImagePath(bitmap: Bitmap, callback: (path: String?) -> Unit) {
         val bytes = ByteArrayOutputStream()
@@ -560,5 +629,26 @@ class MainActivity : BaseActivity(), CanvasListener {
     override fun toggleRedoVisibility(visible: Boolean) {
         if (visible) redo_img.visibility = View.VISIBLE
         else redo_img.visibility = View.GONE
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(BITMAP_PATH, lastBitmapPath)
+
+        if (uriToLoad != null) {
+            outState.putString(URI_TO_LOAD, uriToLoad.toString())
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        lastBitmapPath = savedInstanceState.getString(BITMAP_PATH)!!
+        if (lastBitmapPath.isNotEmpty()) {
+            openPath(lastBitmapPath)
+        } else if (savedInstanceState.containsKey(URI_TO_LOAD)) {
+            uriToLoad = Uri.parse(savedInstanceState.getString(URI_TO_LOAD))
+            tryOpenUri(uriToLoad!!, intent)
+        }
     }
 }

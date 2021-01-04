@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="GENERAL">
+        <ListPreference android:title="Volume keys"
+            android:key="pref_key_volume_keys"
+            />
+        <SwitchPreferenceCompat android:title="Hide Toolbar"
+            android:key="pref_key_hide_toolbar"
+            />
+        <SwitchPreferenceCompat android:title="Allow Zooming"
+            android:key="pref_key_zoom"
+            />
+        <Preference android:title="About"
+            android:key="pref_key_about"
+            />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

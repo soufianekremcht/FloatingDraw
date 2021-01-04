@@ -108,7 +108,9 @@ dependencies {
 
     // balloon
     implementation "com.github.skydoves:balloon:1.2.9"
-
+    
+    // dexter
+    implementation 'com.karumi:dexter:6.2.2'
 
     // Gson
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
