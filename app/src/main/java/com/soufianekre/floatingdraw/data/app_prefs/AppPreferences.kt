@@ -3,10 +3,12 @@ package com.soufianekre.floatingdraw.data.app_prefs
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.media.audiofx.EnvironmentalReverb
+import android.os.Environment
 import androidx.core.content.ContextCompat
 import com.soufianekre.floatingdraw.R
 
-const val PREF_NAME: String = "drawing_pref"
+
 
 class AppPreferences(var context: Context) {
 
@@ -18,9 +20,9 @@ class AppPreferences(var context: Context) {
     companion object {
         fun newInstance(context: Context) = AppPreferences(context)
     }
-
+    val s : String = Environment.getExternalStorageState()
     var internalStoragePath: String
-        get() = prefs.getString(INTERNAL_STORAGE_PATH, "")!!
+        get() = prefs.getString(INTERNAL_STORAGE_PATH,"")!!
         set(internalStoragePath) = prefs.edit().putString(INTERNAL_STORAGE_PATH, internalStoragePath).apply()
 
     var sdCardPath: String

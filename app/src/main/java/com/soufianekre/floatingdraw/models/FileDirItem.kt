@@ -26,7 +26,7 @@ open class FileDirItem(val path: String, val name: String = "", var isDirectory:
             when {
                 sorting and SORT_BY_NAME != 0 -> {
                     result = if (sorting and SORT_USE_NUMERIC_VALUE != 0) {
-                        AlphanumericComparator().compare(name.toLowerCase(), other.name.toLowerCase())
+                        AlphanumericComparator.compare(name.toLowerCase(), other.name.toLowerCase())
                     } else {
                         name.toLowerCase().compareTo(other.name.toLowerCase())
                     }
@@ -90,10 +90,6 @@ open class FileDirItem(val path: String, val name: String = "", var isDirectory:
     fun getParentPath() = path.getParentPath()
 
 
-    fun getFileDurationSeconds(context: Context) = context.getDuration(path)
-
-
-    fun getAlbum(context: Context) = context.getAlbum(path)
 
     fun getTitle(context: Context) = context.getTitle(path)
 

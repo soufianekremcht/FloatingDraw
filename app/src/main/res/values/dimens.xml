@@ -40,6 +40,7 @@
     <dimen name="full_brush_size">40dp</dimen>
 
     <dimen name="img_btn_size">32dp</dimen>
+    <dimen name="my_corner_radius">16dp</dimen>
 
 
 </resources>

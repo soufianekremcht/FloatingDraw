@@ -1,4 +1,4 @@
-package com.soufianekre.floatingdraw.ui.save_image
+package com.soufianekre.floatingdraw.ui.save
 
 import android.app.Activity
 import com.afollestad.materialdialogs.MaterialDialog

@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="settings_layout_key">
 
     <PreferenceCategory android:title="GENERAL">
         <ListPreference android:title="Volume keys"
             android:key="pref_key_volume_keys"
+            android:summary="Use Volume keys to adjust the size of the brush."
             />
         <SwitchPreferenceCompat android:title="Hide Toolbar"
             android:key="pref_key_hide_toolbar"
+            android:summary="Hide toolbar while drawing."
             />
         <SwitchPreferenceCompat android:title="Allow Zooming"
             android:key="pref_key_zoom"
+            android:summary="Set Zooming into The canvas"
             />
         <Preference android:title="About"
             android:key="pref_key_about"
+            android:summary="More Info about The application."
             />
     </PreferenceCategory>
 
