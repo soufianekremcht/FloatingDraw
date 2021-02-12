@@ -18,6 +18,9 @@ import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.SeekBar
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import com.leinardi.android.speeddial.SpeedDialActionItem
+import com.leinardi.android.speeddial.SpeedDialView
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
@@ -170,7 +173,6 @@ class MainActivity : BaseActivity(), CanvasListener {
     fun setupCanvas() {
 
         setCanvasBackgroundColor(Color.WHITE)
-
         defaultPath = ""
         defaultExtension = ".png"
         brushSize = 30f
@@ -183,12 +185,59 @@ class MainActivity : BaseActivity(), CanvasListener {
         brush_color_preview.setOnClickListener {
             showBrushColorPicker(it)
         }
-
         undo_img.setOnClickListener { drawing_canvas.undo() }
         redo_img.setOnClickListener { drawing_canvas.redo() }
         eraser_img.setOnClickListener {
             onEraserClicked()
         }
+
+
+        // Testing Special Dial
+        canvas_options_fab.apply {
+            addActionItem(
+                    SpeedDialActionItem.Builder(R.id.fab_change_background_color, R.drawable.ic_appintro_fab_selected)
+                            .create())
+            addActionItem(
+                    SpeedDialActionItem.Builder(R.id.fab_layers, R.drawable.ic_layers)
+                            .create())
+            addActionItem(
+                    SpeedDialActionItem.Builder(R.id.fab_shapes, R.drawable.ic_format_shapes)
+                            .create())
+            addActionItem(
+                    SpeedDialActionItem.Builder(R.id.fab_straight_line, R.drawable.ic_straight_line)
+                            .create())
+        }
+        // Different Options
+        canvas_options_fab.addActionItem(SpeedDialActionItem.Builder(R.id.fab_brushes, R.drawable.ic_draw)
+                .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.accent_light_blue, getTheme()))
+                .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
+                .setLabel(getString(R.string.change_backgournd_color))
+                .setLabelColor(Color.WHITE)
+                .setLabelBackgroundColor(ResourcesCompat.getColor(getResources(),R.color.black, getTheme()))
+                .setLabelClickable(false)
+                .create())
+
+
+        canvas_options_fab.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
+            when (actionItem.id) {
+                R.id.fab_change_background_color -> {
+                    showInfo("No label action clicked!\nClosing with animation")
+                    canvas_options_fab.close() // To close the Speed Dial with animation
+                    return@OnActionSelectedListener true // false will close it without animation
+                }
+            }
+            false
+        })
+        /***
+
+        // hide when scrolling ( Coordinator Layout)
+        val params = canvas_options_fab.layoutParams as CoordinatorLayout.LayoutParams
+        params.behavior = SpeedDialView.ScrollingViewSnackbarBehavior()
+        canvas_options_fab.requestLayout()
+
+
+         ***/
+
 
     }
 

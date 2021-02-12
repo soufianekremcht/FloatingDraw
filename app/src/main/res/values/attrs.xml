@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<resources>
+    <item name="fab_change_background_color" type="id" />
+    <item name="fab_layers" type="id" />
+    <item name="fab_brushes" type="id" />
+    <item name="fab_shapes" type="id" />
+    <item name="fab_straight_line" type="id" />
+</resources>

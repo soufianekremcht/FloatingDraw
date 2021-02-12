@@ -25,5 +25,6 @@
     <string name="new_folder">New Folder</string>
     <string name="confirm">Confirm</string>
     <string name="no_storage_permissions">Storage Permissions has been denied</string>
+    <string name="change_backgournd_color">Change Background Color</string>
 
 </resources>
