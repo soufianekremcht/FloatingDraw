@@ -1,2 +1,4 @@
 # FloatingDraw
-#### Drawing App for android Devices
+#### Simple Drawing App for Android
+
+
