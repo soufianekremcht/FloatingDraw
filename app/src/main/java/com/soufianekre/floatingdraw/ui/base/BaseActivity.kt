@@ -10,11 +10,11 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun showInfo(msg : String){
-        Toasty.error(this,msg,Toasty.LENGTH_SHORT).show()
+        Toasty.info(this,msg,Toasty.LENGTH_SHORT).show()
     }
 
     fun showSuccess(msg : String){
-        Toasty.error(this,msg,Toasty.LENGTH_SHORT).show()
+        Toasty.success(this,msg,Toasty.LENGTH_SHORT).show()
     }
 
     fun showError(msg : String){

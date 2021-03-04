@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/save_image_layout"
     android:orientation="vertical">
 
@@ -23,31 +23,44 @@
 
         <TextView
             android:id="@+id/save_image_path"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:padding="@dimen/spacing_small"/>
-
-        <TextView
-            android:id="@+id/save_image_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="File name"/>
-
-        <EditText
-            android:id="@+id/save_image_filename_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_small"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:textCursorDrawable="@null"
-            android:textSize="@dimen/font_normal"/>
+            android:layout_margin="@dimen/spacing_small"
+            android:padding="@dimen/spacing_normal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?selectableItemBackground"
+            android:hint="Choose a path to Save"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal"
+            app:hintAnimationEnabled="true"
+            android:autofillHints="File name"
+            android:hint="File name"
+            style="@style/style_text_input_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/save_dialog_file_name_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Image Format"/>
 
         <RadioGroup
             android:id="@+id/save_image_radio_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checkedButton="@id/save_image_radio_png"
+            android:layout_margin="@dimen/spacing_normal"
+
+
             >
 
             <com.google.android.material.radiobutton.MaterialRadioButton

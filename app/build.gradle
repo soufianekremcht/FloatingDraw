@@ -14,7 +14,6 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -59,10 +58,17 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.lifecycleVersion"
 
+    // coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9"
 
-    /*** third party Ui components  ***/
+    /**** UI ****/
+
+    // floating Btn
+    implementation "com.leinardi.android:speed-dial:3.1.1"
+    implementation 'io.mattcarroll.hover:hover:0.9.8'
     // color picker
-    implementation 'com.github.duanhong169:colorpicker:1.1.6'
+    implementation "com.github.skydoves:colorpickerview:2.2.2"
     // peek view
     implementation 'com.klinkerapps:peekview:1.2.3'
     // custom Toast
@@ -70,6 +76,8 @@ dependencies {
     // material dialogs
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.material-dialogs:files:3.2.1'
+    implementation 'com.afollestad.material-dialogs:bottomsheets:3.2.1'
+    implementation 'com.afollestad.material-dialogs:lifecycle:3.2.1'
     // app intro
     implementation 'com.github.AppIntro:AppIntro:6.0.0'
     // transformation layout
@@ -107,7 +115,9 @@ dependencies {
 
     // balloon
     implementation "com.github.skydoves:balloon:1.2.9"
-
+    
+    // dexter
+    implementation 'com.karumi:dexter:6.2.2'
 
     // Gson
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
@@ -121,6 +131,8 @@ dependencies {
     implementation 'com.github.daniel-stoneuk:material-about-library:3.1.2'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
 
+    // lottie
+    implementation "com.airbnb.android:lottie:3.6.0"
     /* Test + Debug */
 
     // debug leaks

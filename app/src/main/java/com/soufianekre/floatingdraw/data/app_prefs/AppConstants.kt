@@ -2,6 +2,8 @@ package com.soufianekre.floatingdraw.data.app_prefs
 
 import android.os.Build
 
+const val PREF_NAME: String = "drawing_pref"
+
 const val PNG = "png"
 const val SVG = "svg"
 const val JPG = "jpg"

@@ -4,4 +4,9 @@
     <style name="canvas_icon_style">
 
     </style>
+
+    <style name="style_text_input_layout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxBackgroundColor">@android:color/transparent</item>
+        <item name="hintAnimationEnabled">true</item>
+    </style>
 </resources>

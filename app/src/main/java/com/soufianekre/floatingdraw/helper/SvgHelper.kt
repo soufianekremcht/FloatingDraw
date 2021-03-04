@@ -6,7 +6,6 @@ import android.net.Uri
 import android.sax.RootElement
 import android.util.Xml
 import com.soufianekre.floatingdraw.R
-import com.soufianekre.floatingdraw.extensions.getFileOutputStream
 import com.soufianekre.floatingdraw.models.FileDirItem
 import com.soufianekre.floatingdraw.extensions.getFilenameFromPath
 import com.soufianekre.floatingdraw.models.CustomPath
@@ -14,28 +13,37 @@ import com.soufianekre.floatingdraw.ui.base.BaseActivity
 import com.soufianekre.floatingdraw.ui.main.MainActivity
 import com.soufianekre.floatingdraw.ui.views.MyCanvas
 import com.soufianekre.floatingdraw.ui.views.PaintOptions
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.*
 
 object SvgHelper {
-    fun saveSvg(activity: BaseActivity, path: String, canvas: MyCanvas) {
-        activity.getFileOutputStream(
-            FileDirItem(
+    fun saveSvgForAndroidO(activity: BaseActivity, path: String, canvas: MyCanvas):Boolean {
+        val fileDirItem =  FileDirItem(
                 path,
-                path.getFilenameFromPath()
-            ), true) {
-            saveToOutputStream(activity, it, canvas)
+                path.getFilenameFromPath())
+        var result : Boolean = false
+        GlobalScope.launch {
+            StorageHelper.getFileOutputStreamForAndroidO(activity,fileDirItem,true){
+               result = saveToOutputStream(activity,canvas = canvas,outputStream = it)
+            }
         }
+        return result
+
     }
 
-    fun saveToOutputStream(activity: BaseActivity, outputStream: OutputStream?, canvas: MyCanvas) {
-        if (outputStream != null) {
+    fun saveToOutputStream(activity: BaseActivity, outputStream: OutputStream?, canvas: MyCanvas):Boolean {
+        return if (outputStream != null) {
             val backgroundColor = (canvas.background as ColorDrawable).color
             val writer = BufferedWriter(OutputStreamWriter(outputStream))
             writeSvg(writer, backgroundColor, canvas.mPaths, canvas.width, canvas.height)
             writer.close()
-            activity.showInfo(activity.getString(R.string.file_saved))
+            Timber.e("File has been saved in SVG Format")
+            true
         } else {
-            activity.showError(activity.getString(R.string.unknown_error_occurred))
+            Timber.e("Error when saving in SVG Format")
+            false
         }
     }
 
