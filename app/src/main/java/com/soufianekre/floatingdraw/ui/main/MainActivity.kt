@@ -47,6 +47,7 @@ import java.io.OutputStream
 
 
 class MainActivity : BaseActivity(), CanvasListener {
+
     private val PICK_IMAGE_INTENT = 1
     private val SAVE_IMAGE_INTENT = 2
 
@@ -192,30 +193,41 @@ class MainActivity : BaseActivity(), CanvasListener {
         }
 
 
-        // Testing Special Dial
+        // TODO : Testing Special Dial
         canvas_options_fab.apply {
             addActionItem(
-                    SpeedDialActionItem.Builder(R.id.fab_change_background_color, R.drawable.ic_appintro_fab_selected)
+                    SpeedDialActionItem.Builder(R.id.fab_change_background_color, R.drawable.ic_check_white_24dp)
+                            .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.accent_light_blue, getTheme()))
+                            .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
                             .create())
             addActionItem(
                     SpeedDialActionItem.Builder(R.id.fab_layers, R.drawable.ic_layers)
+                            .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.accent_light_blue, getTheme()))
+                            .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
                             .create())
             addActionItem(
                     SpeedDialActionItem.Builder(R.id.fab_shapes, R.drawable.ic_format_shapes)
+                            .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.accent_light_blue, getTheme()))
+                            .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
                             .create())
             addActionItem(
                     SpeedDialActionItem.Builder(R.id.fab_straight_line, R.drawable.ic_straight_line)
+                            .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.accent_light_blue, getTheme()))
+                            .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
+
                             .create())
         }
+
         // Different Options
-        canvas_options_fab.addActionItem(SpeedDialActionItem.Builder(R.id.fab_brushes, R.drawable.ic_draw)
-                .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.accent_light_blue, getTheme()))
-                .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
-                .setLabel(getString(R.string.change_backgournd_color))
-                .setLabelColor(Color.WHITE)
-                .setLabelBackgroundColor(ResourcesCompat.getColor(getResources(),R.color.black, getTheme()))
-                .setLabelClickable(false)
-                .create())
+        canvas_options_fab.addActionItem(
+                SpeedDialActionItem.Builder(R.id.fab_brushes, R.drawable.ic_draw)
+                        .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.accent_light_blue, getTheme()))
+                        .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
+                        .setLabel(getString(R.string.change_backgournd_color))
+                        .setLabelColor(Color.WHITE)
+                        .setLabelBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.black, getTheme()))
+                        .setLabelClickable(false)
+                        .create())
 
 
         canvas_options_fab.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
@@ -238,6 +250,13 @@ class MainActivity : BaseActivity(), CanvasListener {
 
          ***/
 
+
+    }
+
+    private fun setupSpeedDialFab(speedDialItemBuilder: SpeedDialActionItem.Builder): SpeedDialActionItem {
+        return speedDialItemBuilder.setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.accent_light_blue, getTheme()))
+                .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
+                .create()
 
     }
 

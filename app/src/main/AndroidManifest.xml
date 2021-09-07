@@ -10,9 +10,6 @@
         android:maxSdkVersion="28"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-    <uses-feature
-        android:name="android.hardware.faketouch"
-        android:required="false" />
 
     <application
         android:name=".FloatingDrawApp"
@@ -28,7 +25,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <data android:mimeType="image/*" />
 
             </intent-filter>
 
@@ -36,6 +32,7 @@
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
+
             </intent-filter>
 
             <intent-filter>
